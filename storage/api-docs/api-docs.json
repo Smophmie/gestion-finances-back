@@ -1,0 +1,968 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Finance Management API",
+        "description": "API permettant de gérer les transactions financières des utilisateurs",
+        "contact": {
+            "email": "support@financeapi.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer toutes les transactions de l'utilisateur connecté",
+                "operationId": "getTransactions",
+                "responses": {
+                    "200": {
+                        "description": "Liste des transactions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Créer une nouvelle transaction",
+                "operationId": "createTransaction",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "type",
+                                    "amount",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Salaire"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "earning"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "1000.50"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-09-04"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaction créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer une transaction spécifique",
+                "operationId": "getTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la transaction",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction non trouvée"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Mettre à jour une transaction existante",
+                "operationId": "updateTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "type",
+                                    "amount",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Salaire"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "earning"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "1000.50"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-09-04"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaction mise à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Supprimer une transaction",
+                "operationId": "deleteTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Transaction non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/earnings": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer les revenus de l'utilisateur connecté",
+                "operationId": "getEarnings",
+                "responses": {
+                    "200": {
+                        "description": "Liste des revenus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/earnings-sum": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer la somme des revenus de l'utilisateur connecté",
+                "operationId": "getEarningsSum",
+                "responses": {
+                    "200": {
+                        "description": "Somme des revenus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_earnings": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": "1500.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/expenses": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer les dépenses de l'utilisateur connecté",
+                "operationId": "getExpenses",
+                "responses": {
+                    "200": {
+                        "description": "Liste des dépenses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/expenses-sum": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer la somme des dépenses de l'utilisateur connecté",
+                "operationId": "getExpensesSum",
+                "responses": {
+                    "200": {
+                        "description": "Somme des dépenses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_expenses": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": "500.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/total-sum": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Récupérer la somme totale des transactions de l'utilisateur connecté",
+                "operationId": "getTotalSum",
+                "responses": {
+                    "200": {
+                        "description": "Somme totale",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sum": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": "1000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users",
+                "description": "Retrieve a list of all users.",
+                "operationId": "7e2f5799553ec93c9c43e2a58490d447",
+                "responses": {
+                    "200": {
+                        "description": "A list of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Register a new user",
+                "description": "Create a new user and return an API token.",
+                "operationId": "f1fde7f4a932e393f6042d1b92e65b0a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User Created Successfully"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOi..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Login a user",
+                "description": "Authenticate a user and return an API token.",
+                "operationId": "abc53c091ac89d7a2af0892997d1ee08",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOi..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Logout a user",
+                "description": "Revoke all tokens of the authenticated user.",
+                "operationId": "43958ea73917f8e50945f73452c3bff0",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not authenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a specific user",
+                "description": "Retrieve details of a specific user by ID.",
+                "operationId": "910a0c7cf580e1c605648d82a4e57f46",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A specific user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update a user",
+                "description": "Update user details.",
+                "operationId": "ddfe232db1870b82493bf8bd25596d37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "admin"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "admin": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a user",
+                "description": "Remove a user from the system by ID.",
+                "operationId": "43dd20becb1f47444e484cbb18ce345c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "User deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/isadmin": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Check if the authenticated user is an admin",
+                "description": "Determine if the currently authenticated user has admin privileges. Returns true or false.",
+                "operationId": "1b1d6a155c7e440e03871b1c8c8ff492",
+                "responses": {
+                    "200": {
+                        "description": "Admin status of the authenticated user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                },
+                                "example": true
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not authenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Transaction": {
+                "title": "Transaction",
+                "description": "Details of a financial transaction",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the transaction",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "The name or description of the transaction",
+                        "type": "string",
+                        "example": "Transaction 1"
+                    },
+                    "user_id": {
+                        "description": "The ID of the user associated with the transaction",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "description": "The type of the transaction (e.g., earning, expense)",
+                        "type": "string",
+                        "example": "earning"
+                    },
+                    "amount": {
+                        "description": "The amount of the transaction",
+                        "type": "number",
+                        "format": "float",
+                        "example": 12
+                    },
+                    "date": {
+                        "description": "The date of the transaction",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-08"
+                    },
+                    "created_at": {
+                        "description": "The date and time when the transaction was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-04T13:19:47Z"
+                    },
+                    "updated_at": {
+                        "description": "The date and time when the transaction was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-04T13:19:47Z"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "Details of a user in the system",
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "The user's full name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "The user's email address",
+                        "type": "string",
+                        "example": "john.doe@example.com"
+                    },
+                    "admin": {
+                        "description": "Indicates if the user has administrative privileges",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "created_at": {
+                        "description": "The date and time when the user was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-04T13:19:47Z"
+                    },
+                    "updated_at": {
+                        "description": "The date and time when the user was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-04T13:19:47Z"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Transactions",
+            "description": "Gestion des transactions financières"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        }
+    ]
+}
