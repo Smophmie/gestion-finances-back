@@ -37,11 +37,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
     
 
-    Route::get('/transactions/user/{id}', [TransactionController::class, 'getTransactionsByIdUser']);
+    Route::get('/earnings', [TransactionController::class, 'getEarnings']);
 
-    Route::get('/earnings/user/{id}', [TransactionController::class, 'getEarningsByIdUser']);
+    Route::get('/earnings-sum', [TransactionController::class, 'getEarningsSum']);
 
-    Route::get('/expenses/user/{id}', [TransactionController::class, 'getExpensesByIdUser']);
+
+    Route::get('/expenses', [TransactionController::class, 'getExpenses']);
+
+    Route::get('/expenses-sum', [TransactionController::class, 'getExpensesSum']);
+
+    Route::get('/total-sum', [TransactionController::class, 'getTotalSum']);
+
 
 
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');

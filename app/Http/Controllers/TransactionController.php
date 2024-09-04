@@ -11,7 +11,8 @@ class TransactionController extends Controller
 
     public function index()
     {
-        $transactions = Transaction::all();
+        $user = Auth::user();
+        $transactions = Transaction::where('user_id', $user->id)->get();
         return $transactions;
     }
 
@@ -68,26 +69,52 @@ class TransactionController extends Controller
         return 'Transaction deleted successfully';
     }
 
-    public function getTransactionsByIdUser($id)
-    {
-        $transactions = Transaction::where('user_id', $id)->get();
-        return response()->json($transactions, 200);
-    }
 
-    public function getEarningsByIdUser($id)
+    public function getEarnings()
     {
-        $transactions = Transaction::where('user_id', $id)
+        $user = Auth::user();
+        $transactions = Transaction::where('user_id', $user->id)
                                     ->where('type', 'earning')
                                     ->get();
         return response()->json($transactions, 200);
     }
 
-
-    public function getExpensesByIdUser($id)
+    public function getEarningsSum()
     {
-        $transactions = Transaction::where('user_id', $id)
+        $user = Auth::user();
+        $totalEarnings = Transaction::where('user_id', $user->id)
+                                    ->where('type', 'earning')
+                                    ->sum('amount');
+
+        return response()->json(['total_earnings' => $totalEarnings], 200);
+    }
+
+
+    public function getExpenses()
+    {
+        $user = Auth::user();
+        $transactions = Transaction::where('user_id', $user->id)
                                     ->where('type', 'expense')
                                     ->get();
         return response()->json($transactions, 200);
+    }
+
+    public function getExpensesSum()
+    {
+        $user = Auth::user();
+        $totalExpenses = Transaction::where('user_id', $user->id)
+                                    ->where('type', 'expense')
+                                    ->sum('amount');
+
+        return response()->json(['total_expenses' => $totalExpenses], 200);
+    }
+
+    public function getTotalSum()
+    {
+        $user = Auth::user();
+        $total = Transaction::where('user_id', $user->id)
+                                    ->sum('amount');
+
+        return response()->json(['sum' => $total], 200);
     }
 }
