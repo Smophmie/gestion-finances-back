@@ -28,18 +28,15 @@ class TransactionController extends Controller
 
     public function create(Request $request)
     {
-        // Valider les données de la requête
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'amount' => 'required|numeric',
-            // 'date' => 'required|date',
+            'date' => 'required|date',
         ]);
 
-        // Récupérer l'utilisateur connecté
         $user = Auth::user();
 
-        // Créer la transaction avec le user_id de l'utilisateur connecté
         $transaction = new Transaction([
             'name' => $request->name,
             'type' => $request->type,
@@ -48,16 +45,12 @@ class TransactionController extends Controller
             'user_id' => $user->id,
         ]);
 
-        // Sauvegarder la transaction dans la base de données
         $transaction->save();
 
-        // Retourner la transaction nouvellement créée
         return response()->json($transaction, 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -71,13 +64,40 @@ class TransactionController extends Controller
         return $transaction;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(string $id)
     {
         $transaction = Transaction::find($id);
         $transaction->delete();
         return 'Transaction deleted successfully';
     }
+
+
+    public function getTransactionsByIdUser($id)
+    {
+        $transactions = Transaction::where('user_id', $id)->get();
+
+        return response()->json($transactions, 200);
+    }
+
+
+    public function getEarningsByIdUser($id)
+    {
+        $transactions = Transaction::where('user_id', $id)
+                                    ->where('type', 'earning')
+                                    ->get();
+
+        return response()->json($transactions, 200);
+    }
+
+    
+    public function getExpensesByIdUser($id)
+    {
+        $transactions = Transaction::where('user_id', $id)
+                                    ->where('type', 'expense')
+                                    ->get();
+
+        return response()->json($transactions, 200);
+    }
+
 }

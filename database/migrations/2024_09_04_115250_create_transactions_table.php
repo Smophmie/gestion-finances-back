@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->enum('type', ['earning', 'expense']);
             $table->float('amount');
-            $table->date('date')->nullable();
+            $table->date('date');
             $table->text('description')->nullable();
         });
     }
