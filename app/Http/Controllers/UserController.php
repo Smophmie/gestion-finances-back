@@ -259,6 +259,12 @@ class UserController extends Controller
         return $user;
     }
 
+    public function connectedUser()
+    {
+        $user = Auth::user();
+        return $user;
+    }
+
     /**
  * @OA\Get(
  *     path="/isadmin",

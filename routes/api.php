@@ -16,6 +16,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/isadmin/{id}', [UserController::class, 'isAdmin'])->name('users.isadmin');
 
+    Route::get('/connectedUser', [UserController::class, 'connectedUser']);
     
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
