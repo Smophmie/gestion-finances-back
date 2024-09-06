@@ -113,6 +113,7 @@ class TransactionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255',
+            'description' => 'string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
         ]);
@@ -125,6 +126,7 @@ class TransactionController extends Controller
             'amount' => $request->amount,
             'date' => $request->date,
             'user_id' => $user->id,
+            'description' => $request->description,
         ]);
 
         $transaction->save();
