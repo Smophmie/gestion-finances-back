@@ -14,7 +14,7 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::get('/isadmin/{id}', [UserController::class, 'isAdmin'])->name('users.isadmin');
+    Route::get('/isadmin', [UserController::class, 'isAdmin'])->name('users.isadmin');
 
     Route::get('/connectedUser', [UserController::class, 'connectedUser']);
     
