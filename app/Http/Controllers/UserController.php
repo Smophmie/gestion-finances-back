@@ -98,10 +98,8 @@ class UserController extends Controller
 
     if ($validator->fails()) {
         return response()->json([
-            'status' => false,
-            'message' => 'Validation error',
             'errors' => $validator->errors(),
-        ], 401);
+        ], 422);
     }
 
     $user = User::create([
@@ -113,10 +111,9 @@ class UserController extends Controller
     $token = $user->createToken("API TOKEN")->plainTextToken;
 
     return response()->json([
-        'status' => true,
         'message' => 'User Created Successfully',
         'token' => $token,
-    ], 200);
+    ], 201);
 }
 
     /**
